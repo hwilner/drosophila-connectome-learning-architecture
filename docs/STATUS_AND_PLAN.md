@@ -1,17 +1,21 @@
-# Status and Plan
+# Research Status and Plan
 
-## Current status
+## Answer to the current research question
 
-The public staging scope is limited to data-free graph-architecture utilities, synthetic tests, and documentation that explains their boundaries. It is appropriate for independent research discussion and software review, but it is not a record of empirical work. No dataset, source-specific metadata, result table, figure, or inference is included.
+Two predefined structural diagnostics were completed on a fixed labelled directed representation. Neither yields a robust enrichment result. The convergence diagnostic was non-discriminative under both reference families. The reciprocal-pair diagnostic changed direction when the reference family changed, so it cannot support a reference-independent structural conclusion.
 
-This status note supersedes earlier working-tree documentation and source comments that may have described retrieval activity, dataset-specific transformations, numerical observations, or interpretations. Such material is excluded from the current public tree. Historical version-control records, if available in the originating repository, are retained as history rather than as a current claim.
+## Completed work
 
-## Near-term plan
+The project completed technical representation and label audits, specified a directed graph, and implemented two constrained reference families. It then completed the frozen convergence and reciprocal-pair diagnostics. The public code retains data-free graph construction, degree-preserving rewiring, class-block-constrained rewiring, and motif-counting utilities with synthetic invariant tests.
 
-The immediate maintenance priorities are to preserve deterministic in-memory utilities, broaden synthetic edge-case coverage, keep public-callable documentation clear, and run the release-boundary scanner with routine validation. Changes should remain dependency-neutral unless an owner approves a specific need.
+## Successful and non-supportive results
 
-## Boundary for future work
+The strongest methodological result is that constrained reference architecture materially changes the interpretation of reciprocal pairs. The convergence statistic did not distinguish the observed graph from either reference family. The reciprocal statistic is therefore useful as a sensitivity diagnostic, but it is not evidence of enrichment, depletion, learning computation, or mechanism.
 
-Any work involving external material, empirical graph preparation, output generation, visualization, or interpretation is deferred until an owner defines an appropriate non-public workflow and an explicit release decision. It must not be introduced through tests, examples, fixtures, or documentation by implication.
+## What remains unrun
 
-See [methods scope](METHODS_SCOPE.md), [deferred directions](DEFERRED_AND_DROPPED_DIRECTIONS.md), and [release boundary](RELEASE_BOUNDARY.md).
+The ordered feed-forward-triangle definition is implemented and verified on synthetic graphs only. No empirical triangle count or comparison against either reference family has been performed. No behavioral, functional, or causal analysis is included.
+
+## Next research decision
+
+Any empirical motif extension must be specified before calculation and reported against both reference families. Public contributions are welcome for data-free algorithms, synthetic tests, documentation, and review of representation assumptions.

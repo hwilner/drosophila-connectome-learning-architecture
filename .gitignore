@@ -1,0 +1,80 @@
+# Research data and generated analytical material
+/data/
+/results/
+/figures/
+/outputs/
+/artifacts/
+/reports/
+
+# Retrieved, external, and local-only material
+/downloads/
+/external/
+/external_docs/
+/source_material/
+/source_metadata/
+/access_logs/
+/archives/
+/cache/
+/caches/
+
+# Research notebooks and notebook execution state
+/notebooks/
+*.ipynb
+.ipynb_checkpoints/
+
+# Data and result file formats kept out of the public tree
+*.csv
+*.tsv
+*.tab
+*.parquet
+*.feather
+*.h5
+*.hdf5
+*.npy
+*.npz
+*.pkl
+*.pickle
+*.json
+*.jsonl
+*.yaml
+*.yml
+
+# Figures and other rendered assets
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.pdf
+*.tif
+*.tiff
+
+# Downloaded archives and compressed material
+*.zip
+*.7z
+*.rar
+*.tar
+*.tgz
+*.tbz
+*.gz
+*.bz2
+*.xz
+
+# Python, test, and tool caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+.env
+
+# Operating-system and editor files
+.DS_Store
+.vscode/
+.idea/
+*.tmp
+*.bak

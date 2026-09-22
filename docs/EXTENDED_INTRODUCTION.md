@@ -2,6 +2,8 @@
 
 This document assumes **zero neuroscience background**. It explains every idea in plain language with analogies, then shows how each idea maps onto the actual code in this repository. For a shorter version with full citations, see [Introduction](INTRODUCTION.md); for what the project concluded, see [Current Results and Discussion](CURRENT_RESULTS_AND_DISCUSSION.md).
 
+**Concept figure.** The repository's whole method — wiring diagram to directed graph, motif counting, and the degree-preserving shuffle that decides whether a count is surprising — is drawn in [concept_figure.md](concept_figure.md) as an embedded Mermaid diagram. (The release boundary does not allow image files in the tracked tree, so the figure lives as text.) Parts 5 and 6 below work through the same pipeline as explicit hand-countable arithmetic.
+
 ## Part 1: What is a connectome?
 
 Your brain contains billions of nerve cells, called **neurons**, and they talk to each other through connections called **synapses**. A **connectome** is the complete wiring diagram of a nervous system: a list of every neuron and every connection between them.
@@ -64,11 +66,30 @@ flowchart LR
 
 Counting a motif is just **description**. The hard part is deciding whether the count is *surprising*.
 
+**Counting by hand, once, so the idea is concrete.** Take a tiny four-node graph with five arrows: A→B, A→C, B→C, C→A, D→A. Now tally each motif by enumeration — this is literally what `src/motif_counts.py` does, just on graphs too big for a notebook margin:
+
+- *Feed-forward triangles* (X→Y, Y→Z, X→Z): only one — A→B, B→C, A→C. The triple (C, A, B) fails because C→A and A→B exist but C→B does not.
+- *Reciprocal pairs*: one — A→C and C→A.
+- *Convergent targets* (nodes with at least two incoming arrows): A gets arrows from C and D, and C gets arrows from A and B — so two targets have convergence.
+
+Nothing here is more than careful list-checking. Every motif count in this project is this procedure scaled up.
+
 ## Part 6: What is a null model?
 
 Suppose you count 500 reciprocal pairs in the fly brain. Is that a lot? The honest answer is: **compared to what?** A null model is the "compared to what" made explicit. It is a way of generating randomized comparison networks, so you can ask whether your count is unusual for a network that shares some basic properties with the real one but is otherwise random.
 
 The key idea used here is the **degree-preserving shuffle**. Each node's **degree** is its number of connections — in a directed graph, its **in-degree** (arrows in) and **out-degree** (arrows out). Imagine every neuron is a person holding a fixed number of outgoing and incoming rope ends. The degree-preserving shuffle repeatedly takes two arrows, A→B and C→D, and swaps their targets to get A→D and C→B. Every node keeps exactly the same number of ropes, so all the boring explanations for a motif count — "this neuron just talks a lot" — are held fixed. If a motif is *still* unusually common after thousands of these swaps, the pattern needs a better explanation than raw connectedness (Fosdick et al. 2018, doi:10.1137/16M1087175).
+
+**One swap, done explicitly.** Use the four-node graph from Part 5: arrows A→B, A→C, B→C, C→A, D→A. Pick the arrows B→C and D→A and swap their targets: they become B→A and D→C. Check the degrees before and after:
+
+| Node | In-degree before | Out-degree before | In-degree after | Out-degree after |
+|---|---|---|---|---|
+| A | 2 | 2 | 2 | 2 |
+| B | 1 | 1 | 1 | 1 |
+| C | 2 | 1 | 2 | 1 |
+| D | 0 | 1 | 0 | 1 |
+
+Identical columns, different graph — the reciprocal pair A↔C survived, but the feed-forward triangle A→B→C with A→C is gone (B→C no longer exists). That is the whole null-model engine: repeat this swap thousands of times, recount the motifs each time, and you get the reference distribution by brute enumeration rather than by any theorem. Whether the real brain's count sits oddly far out among the shuffled counts is the entire statistical question.
 
 The code implements this in `degree_preserving_null` (`src/null_models.py`), built on NetworkX's `directed_edge_swap`, and then *checks its own work*: after rewiring it raises an error if the degree signature changed or a self-loop appeared. The more constrained variant, `class_constrained_degree_preserving_null` (`src/class_constrained_null_models.py`), additionally preserves the number of edges between each pair of neuron classes — like shuffling road connections while keeping the total count of city-to-suburb, suburb-to-suburb, and suburb-to-city roads fixed. One subtlety the literature makes clear: naive edge swapping can sample some graphs more often than others, so unbiased directed rewiring needs care about how swaps are proposed and accepted (Roberts and Coolen 2012, doi:10.1103/PhysRevE.85.046103).
 

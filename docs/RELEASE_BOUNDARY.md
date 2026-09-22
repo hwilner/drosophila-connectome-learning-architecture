@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This public repository contains data-free graph software, synthetic tests, and a concise qualitative account of completed structural diagnostics. The status record reports what the diagnostics did and did not support without publishing numerical outputs, source material, or operational records.
+This public repository contains data-free graph software, synthetic tests, and a concise qualitative account of completed structural diagnostics. The status record reports what the diagnostics did and did not support without including numerical outputs, source material, or operational records.
 
 ## Allowed material
 

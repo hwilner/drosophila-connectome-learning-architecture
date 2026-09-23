@@ -122,7 +122,16 @@ def find_violations(repository_root: Path, paths: Iterable[Path]) -> list[str]:
         if relative_path == Path("docs/INTRODUCTION.md"):
             continue
         text = (repository_root / relative_path).read_text(encoding="utf-8", errors="replace")
-        for description, pattern in TEXT_MARKERS.items():
+        markers = TEXT_MARKERS
+        if relative_path == Path("docs/EXTENDED_INTRODUCTION.md"):
+            # Owner-approved exemption: docs/EXTENDED_INTRODUCTION.md is exempt
+            # from the external-URL rule only; all other markers still apply.
+            markers = {
+                description: pattern
+                for description, pattern in TEXT_MARKERS.items()
+                if description != "external URL"
+            }
+        for description, pattern in markers.items():
             if pattern.search(text):
                 violations.append(f"{relative_path}: {description} marker")
         if relative_path.parts and relative_path.parts[0] == "tests" and PROTECTED_TEST_PATH.search(text):

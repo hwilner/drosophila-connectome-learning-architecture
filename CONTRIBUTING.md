@@ -10,6 +10,10 @@ Suitable contributions improve in-memory graph utilities, synthetic fixtures, de
 
 Do not add data, downloaded material, source-specific metadata, access logs, notebooks, archives, figures, generated outputs, or result-bearing documentation. Do not add numerical findings, outcome claims, or language that attributes biological, functional, or causal meaning to a graph pattern. Do not add personal contact details, affiliations, citations, or licensing material unless an owner explicitly authorizes them.
 
+## Project task workflow
+
+Each atomic task is tracked by a GitHub issue and its matching Project card. When a pull request fully addresses one of those tasks, include `Fixes #<issue-number>`, `Closes #<issue-number>`, or `Resolves #<issue-number>` in the pull-request description. Use a closing keyword only for work that is genuinely complete; use ordinary discussion or a non-closing reference for proposals and partial work. This link gives reviewers a visible relationship between the change and its task, and supports the documented Project-status automation when it is enabled.
+
 ## Tests and checks
 
 Add or update data-free tests for retained behaviour. Tests must use synthetic, in-memory fixtures and must not read from or write to repository data, result, figure, download, or archive paths. Run the validation commands in [the release boundary](docs/RELEASE_BOUNDARY.md) before requesting review.

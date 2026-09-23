@@ -1,38 +1,122 @@
-# Introduction: Reading Connectome Motifs Carefully
+# Introduction: Reading Connectome Patterns Carefully
 
-## What a connectome is
+## Start here
 
-A **connectome** is a map of connections in a nervous system. In a directed connectome, a neuron is a node and a connection is an arrow from a source neuron to a target neuron. Modern *Drosophila* wiring diagrams make it possible to ask system-scale questions about these arrows, including questions about small recurring patterns of connectivity.[1] Earlier reconstructions of the adult central brain, an adult visual pathway, and the larval brain show that this work can be done at different anatomical scales and developmental stages.[8] [9] [10]
+> **Scope of this repository.** This repository studies selected **connection patterns** in a directed-graph representation of a *Drosophila* nervous-system wiring diagram. Its public contents are data-free graph utilities, synthetic software tests, and a qualitative status record. The project asks whether specified patterns differ under stated comparison rules. It does **not** test whether a fly learns, what a circuit computes, how a circuit works, or what causes behavior.
 
-This repository focuses on the structure of selected directed patterns. It does not claim that a pattern proves what a circuit computes, whether an animal learns, or what causes behavior. A wiring diagram is a powerful constraint on possible mechanisms, but it is not a functional experiment.[2] Understanding circuit function additionally requires information such as neuronal dynamics, modulation, and experimental measurements of activity or perturbation effects.[12] [13]
+The word “learning” in the repository name can be misleading without this boundary. The subject provides biological context, but the public work is a bounded structural analysis. The result reported here is about how particular connection patterns behave under particular comparison architectures. It is not evidence for learning, memory, activity, function, mechanism, or cause.
 
-## What a network motif is
+## A concept ladder: from a fruit fly to an arrow diagram
 
-A **network motif** is a small arrangement of connections, such as several sources converging on one target, two nodes connected in both directions, or a feed-forward triangle. Counting a motif is descriptive. Calling it enriched or depleted requires a comparison against an explicit randomized reference network.[3]
+### 1. Why start with a fruit fly?
 
-That reference is often called a **null model**. One useful null model rewires connections while preserving every node’s number of incoming and outgoing edges. It asks whether a pattern is unusual once those connection totals are held fixed. A more constrained null can also preserve coarse totals between designated cell classes. These models ask different scientific questions, so they can legitimately give different answers.[4] [5]
+*Drosophila melanogaster* is the scientific name for a fruit fly. It is widely used in research, which makes it a useful setting for asking carefully limited biological questions. That setting does not make a result about flies a result about people, and it does not make every study of a fly circuit a study of learning. For a gentle introduction to why fruit flies are used in research, see the National Institute of General Medical Sciences overview.[16]
 
-For directed binary graphs, the sampling procedure is part of that specification: naive accept-all edge swaps can be biased, whereas methods that enforce detailed balance can target a stated distribution while conserving in- and out-degrees.[11]
+A fly has a nervous system: a collection of cells that communicate with one another and help coordinate what the animal senses and does. A **neuron** is one of those cells. A neuron can receive and send signals. A **synapse** is a specialized contact through which one neuron can communicate with another. The details of signaling are rich and change over time, but this repository begins with a narrower question: which cells are represented as connected to which other cells? Introductory neuroscience resources explain the cells and communication before any mathematics is needed.[17]
 
-## Why this matters in *Drosophila*
+### 2. What is a connectome?
 
-Connectomic studies of the adult fly have shown that network statistics and motifs can be evaluated under multiple reference families. This makes the reference model part of the interpretation, not a technical afterthought.[6] The mushroom body is an important learning-related fly circuit, but an anatomical pattern within it is still not proof of a learning mechanism.[7] [12] [13]
+A **connectome** is a map of connections in a nervous system. It is a structural map: it records a selected kind of connection, not a direct movie of messages moving through the system. Different reconstructions can cover different parts of an animal, different stages of life, or different levels of detail. A connection map is therefore not interchangeable with the animal itself, with a functional experiment, or with every other map of that species. A beginner-level lesson introduces the word “connectome” at several structural scales.[18]
 
-Different reconstructions have distinct coverage and developmental scope, so a motif analysis should identify its source graph rather than treat fly connectomes as interchangeable.[8] [9] [10] The FlyWire whole-brain annotation study and the associated Codex resource make cell labels, connectivity views, and data access available for an identified dataset.[14] [15]
+Modern *Drosophila* wiring diagrams make it possible to study connection patterns across large parts of a nervous system.[1] [2] Earlier reconstructions of the adult central brain, an adult visual pathway, and the larval brain show that such maps can differ in anatomical coverage and developmental scope.[8] [9] [10] The mushroom body is a fly circuit often discussed in relation to learning, but a structural pattern in that circuit still does not prove a learning mechanism.[7]
 
-## What this project found
+A wiring diagram can constrain ideas about what might be possible, but it cannot by itself establish what is happening at a moment in time. To understand circuit function, researchers also need information such as neural activity, chemical influences, and carefully designed measurements or interventions.[12] [13] This distinction is central to reading the status of this repository without overinterpreting it.
 
-The project completed two predefined structural diagnostics on a fixed labelled directed representation. The convergence diagnostic was **non-discriminative** under both reference families. The reciprocal-pair diagnostic changed direction when the reference family changed. Neither result supports a robust enrichment, depletion, learning-computation, functional, mechanistic, or causal conclusion.
+### 3. How does a living connection become an arrow on a page?
 
-The durable methodological result is narrower: the reciprocal-pair statistic is sensitive to the assumed reference architecture. The ordered feed-forward-triangle definition is implemented and tested on synthetic graphs only; no empirical triangle calculation or null comparison has been run.
+To inspect a connection map with a simple, consistent notation, this project uses a **directed graph**. A graph here is not a chart. It is a deliberately simplified map made of points and arrows. A represented neuron becomes a **node**, or point. A represented connection becomes an **edge**, drawn as an arrow. The arrow begins at a **source** node and points to a **target** node. Introductory graph theory uses the same vocabulary for many kinds of linked systems and explains why direction matters.[19]
+
+For example, `A → B` means that the representation records an arrow from neuron A to neuron B. It does **not** by itself say how strong a signal is, whether B responds at a particular time, whether the connection helps or suppresses activity, or what the fly does. `A → B` is also different from `B → A`: arrow direction is part of the description.
+
+This public software works with caller-supplied, in-memory records or graphs. In its retained representation, repeated directed edges are collapsed into one source-to-target pair, and arrows from a node to itself are omitted. Labels and groups are supplied by the caller. These are explicit choices for making a particular graph representation; they are not a complete description of a nervous system and do not establish biological roles.
+
+### 4. What is a small connection pattern?
+
+A **network motif** is a specified small arrangement of arrows. The word “motif” names an arrangement; it does not automatically mean that the arrangement is important, rare, common, functional, or causal. The classic literature on motifs distinguishes a structural arrangement from a claim about how a system operates.[3] [5]
+
+Consider three hypothetical labelled neurons, A, B, and C. If `A → C` and `B → C`, then two sources point to the same target. This is a **convergence** pattern. If `A → B` and `B → A`, then the two neurons form a **reciprocal pair**. If `A → B`, `B → C`, and `A → C`, the three arrows form an **ordered feed-forward triangle**: A occupies the first role, B the middle role, and C the final role. The names describe only the chosen arrow arrangements.
+
+The word “ordered” matters in the triangle example. Swapping the positions or reversing an arrow creates a different specified arrangement. Likewise, the project’s convergence count asks whether a target receives arrows from a chosen number of distinct eligible sources, while its reciprocal count applies to caller-defined groups. These are analysis definitions, not universal names for biological functions.
+
+### 5. Why is counting a pattern not enough?
+
+Suppose the hypothetical diagram contains many convergence patterns. That raw count is a description of the diagram. It does not yet show that convergence is unusually common or unusually rare. A pattern may occur often simply because some nodes have many arrows arriving or leaving.
+
+To use words such as **enriched** (“more than the comparison expects”) or **depleted** (“less than the comparison expects”), the observed count must be compared with counts from a clearly stated collection of comparison graphs. This collection is called a **null model** or **reference model**. It is not a claim that a brain was assembled at random. It is a rule for holding some features of a graph fixed, changing other features, and asking whether the chosen pattern differs from that baseline.[3] [4]
+
+As a simple analogy, imagine comparing a class’s number of left-handed students with other classes. The interpretation changes if the comparison classes must have the same total enrollment, the same age mix, or both. Each comparison can be reasonable, but each answers a slightly different question. Graph comparison works the same way: what is held fixed determines what “different” means. General background on random networks is useful after learning the graph vocabulary, but it is not a substitute for a project’s own comparison specification.[20]
+
+### 6. What do this project’s two comparison families keep the same?
+
+The public utilities include two families of rewired comparison graphs. Both preserve each node’s number of arrows arriving and leaving. Those totals are called **in-degree** and **out-degree**. The second family also preserves coarse totals of arrows between caller-supplied source and target classes. These two valid choices deliberately keep different aspects of a graph unchanged.
+
+| Comparison family | What it holds fixed | What the comparison can ask |
+| --- | --- | --- |
+| **Degree-preserving** | Each node’s number of incoming and outgoing arrows | Whether the chosen pattern differs once each node’s connection totals are retained |
+| **Class-block-constrained** | Those same per-node totals, plus coarse totals between designated classes | Whether the pattern differs under that additional grouping constraint |
+
+Neither family is declared biologically “correct” by this repository. If a pattern looks different under one family but not another, that is not automatically a software error. It means that the structural interpretation depends on the reference architecture. Technical work on directed degree-preserving randomization explains why a sampling procedure must also be specified carefully.[11]
+
+## What this repository is—and is not
+
+A connectome, a reconstruction, a caller-supplied graph, and this repository are different things. A **reconstruction** is a derived map used to identify cells and connections. A **graph representation** is a chosen simplification of such a map. This repository does not distribute a connectome, retrieve a dataset, or encode an empirical input. Its public code builds and evaluates caller-supplied in-memory directed graphs.
+
+The tests use small invented examples, called **synthetic fixtures**. They check whether the code keeps promised properties unchanged during graph construction or rewiring and whether defined patterns are counted as intended. Such tests validate software behavior. They do not validate a biological hypothesis, reproduce a particular animal, or create a new empirical result.
+
+Published work on adult fly wiring diagrams, annotation, and network statistics supplies useful general context for what a reconstruction can make possible.[1] [6] [14] The FlyWire Codex provides views and labels for an identified external resource, but it is not a repository input or evidence for the result stated below.[15] These external materials are background only; they do not change the scope of this public, data-free software repository.
+
+## How to read this project’s status
+
+Read the following as a bounded software-and-structure status record. Here, **completed** means that a predefined structural diagnostic was carried out on a fixed labelled directed representation under the stated reference families. **Non-discriminative** means that the check did not support a structural difference under either of those comparisons. **Reference-sensitive** means that a result was not stable across the approved comparison architectures. **Synthetic-only** means that a definition and related code were tested on invented examples, not calculated on the approved graph.
+
+| Diagnostic | Current status in plain language | What this does **not** establish |
+| --- | --- | --- |
+| **Convergence** | Completed and non-discriminative under both predefined reference families. The check did not support enrichment or depletion. | A distinctive convergence pattern, a learning computation, function, mechanism, or cause |
+| **Reciprocal pair** | Completed, but its direction changed when the reference family changed. The result is therefore not reference-independent. | A robust enrichment or depletion, or that either reference family is the correct one |
+| **Ordered feed-forward triangle** | Formally defined and tested on synthetic graphs only. No empirical triangle calculation or null comparison has been run. | Any result about the approved graph or any biological conclusion |
+
+The durable methodological result is narrower than a biological conclusion: the reciprocal-pair statistic is sensitive to the assumed reference architecture. The completed diagnostics are inconclusive for enrichment, mechanism, and causal interpretation. They do not establish what a circuit computes, whether a fly learns, or what causes behavior. The repository’s [current results and discussion](CURRENT_RESULTS_AND_DISCUSSION.md) and [status and plan](STATUS_AND_PLAN.md) give the matching qualitative record.
 
 ## How to use the code
 
-The public code builds caller-supplied in-memory directed graphs, performs degree-preserving and class-block-constrained rewiring, and counts defined motifs. Its tests check graph and rewiring invariants on synthetic fixtures. They validate software behavior, not a biological hypothesis.
+The public code constructs caller-supplied in-memory directed graphs, performs degree-preserving and class-block-constrained rewiring, and counts defined patterns. It does not locate files, download material, or create repository outputs. Its synthetic tests check graph and rewiring invariants: properties that an operation is designed to retain. They are safeguards for implementation behavior, not tests of a biological hypothesis.
 
-## Citation provenance
+A reader who wants to extend or review the software should keep the interpretation boundary beside the code boundary. A program can correctly count an arrow pattern on a synthetic graph while still saying nothing about activity, learning, behavior, or causation. Any future use of empirical material, representation choices, or biological interpretation lies outside this public tree and requires an owner decision.
 
-No valid prior GenSpark citation was recoverable from this repository’s reachable history. The verified references below explain the topic and null-model logic; they are not evidence for a new claim in this repository.
+## Glossary
+
+- **Binary directed graph:** A graph that records whether a chosen directed arrow is present, rather than retaining repeated arrows or a connection strength.
+- **Cell class (or label):** A caller-supplied name or grouping for represented nodes. It is part of the analysis specification.
+- **Connectome:** A map of connections in a nervous system. Its coverage and representation need to be stated.
+- **Convergence:** A pattern in which two or more sources point to a shared target.
+- **Directed graph:** A map in which each connection is an arrow from a source to a target.
+- **Edge (arrow):** The graph name for a represented connection from one node to another.
+- **Enriched / depleted:** More / fewer occurrences than expected under a stated comparison rule. A raw count alone does not justify either word.
+- **In-degree / out-degree:** The number of arrows arriving at / leaving a node in a directed graph.
+- **Network motif (pattern):** A small specified arrangement of arrows. Counting it is descriptive; an enrichment claim requires a stated comparison.
+- **Neuron:** A nerve cell that can receive and send signals.
+- **Node:** The graph name for an item drawn as a point; here, a represented neuron.
+- **Null model (reference model):** A stated rule for generating comparison graphs while retaining selected features.
+- **Reciprocal pair:** Two nodes connected by arrows in both directions: `A → B` and `B → A`.
+- **Reconstruction:** A derived representation of anatomical material used to map cells and connections.
+- **Self-loop:** An arrow from a node to itself. The retained public representation omits self-loops.
+- **Synthetic fixture:** A small invented in-memory example used to test software behavior, not evidence about a biological system.
+
+## Learn the basics in this order
+
+The resources below are an ordered **general-background** path. They are not evidence for a repository-specific result, do not identify a repository input, and do not alter the bounded status above.
+
+1. Start with **Research Organism Superheroes: Fruit Flies** for a short, plain-language reason that *Drosophila melanogaster* is a research organism. It supplies organism context without suggesting that a fly graph automatically generalizes to people.[16]
+2. Continue with **Introduction to Neuroscience**, especially the sections on nervous-system cells and neuronal communication. This open introductory textbook defines the biological objects before the graph language used here.[17]
+3. Watch or consult **What is the Connectome?** next. This beginner-level lesson separates the broad idea of a connection map from the repository’s narrower directed-graph representation.[18]
+4. Read **Network Science, Chapter 2: Graph Theory** for nodes, arrows, direction, and in-/out-degree. It provides the shared language needed to read the examples above.[19]
+5. Then read **Network Science, Chapter 3: Random Networks** to understand why a randomized graph can serve as a comparison baseline and why assumptions about that baseline matter.[20]
+6. For an optional, more technical transition to motifs, read the open scholarly article **Motifs in Brain Networks**. It is general background on structural and functional motifs, not evidence that this repository has established a functional motif.[5]
+7. For optional context on an adult fly wiring diagram, read **Neuronal wiring diagram of an adult brain**. Treat it as background on a published reconstruction, not as the source input or evidence for this repository’s status.[1]
+8. For optional context on the mushroom body, read **The connectome of the adult *Drosophila* mushroom body provides insights into function**. Background literature about a learning-related circuit does not turn this project’s structural checks into a test of learning.[7]
+9. Finally, use the **FlyWire Brain** overview for orientation to the wider adult-fly connectome ecosystem. It is optional background; its linked interactive services are not required for reading or using this repository.[21]
+
+**Editorial note on citations.** External citations in this introduction are general educational or scholarly background, not evidence for a new repository claim. No valid prior GenSpark citation was recoverable from this repository’s reachable history. The project-specific status statements above come from this repository’s own scope and status documents.
 
 ## References
 
@@ -51,3 +135,9 @@ No valid prior GenSpark citation was recoverable from this repository’s reacha
 [13]: https://doi.org/10.1242/jeb.164954 "Meinertzhagen (2018), Of what use is connectomics? A personal perspective on the Drosophila connectome"
 [14]: https://doi.org/10.1038/s41586-024-07686-5 "Schlegel et al. (2024), Whole-brain annotation and multi-connectome cell typing of Drosophila"
 [15]: https://codex.flywire.ai/ "FlyWire Codex (accessed 2026), Connectome Data Explorer"
+[16]: https://nigms.nih.gov/biobeat/2024/01/research-organism-superheroes-fruit-flies "Research Organism Superheroes: Fruit Flies"
+[17]: https://open.umn.edu/opentextbooks/textbooks/introduction-to-neuroscience-2022 "Introduction to Neuroscience"
+[18]: https://training.incf.org/lesson/what-is-the-connectome "What is the Connectome?"
+[19]: https://networksciencebook.com/chapter/2 "Network Science, Chapter 2: Graph Theory"
+[20]: https://networksciencebook.com/chapter/3 "Network Science, Chapter 3: Random Networks"
+[21]: https://flywire.ai/ "FlyWire Brain"

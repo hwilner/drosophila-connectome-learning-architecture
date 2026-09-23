@@ -272,6 +272,29 @@ To keep the introduction honest, it ends with the results, stated plainly: the *
 
 All references are the numbered list in [INTRODUCTION.md](INTRODUCTION.md), cited here by number only; no new sources were introduced. The entries used above are: [1] the adult-brain wiring diagram reconstruction; [2] the central-complex connectome and its motif analysis; [3] the founding network-motifs paper; [4] the reference on random graphs with fixed degree sequences; [5] the review of motifs in brain networks; [6] the whole-brain fly connectome network-statistics study; [7] the adult mushroom-body connectome; [8] the adult central-brain connectome; [9] the larval insect-brain connectome; [10] the visual-pathway connectome; [11] the study of unbiased degree-preserving randomization; [12] and [13] perspectives on what connectomes can and cannot deliver; [14] the whole-brain annotation study; [15] the public connectivity explorer.
 
+## Learn more (verified links)
+
+Every link below was fetched and verified at the time of writing.
+
+**Connectomes**
+- [Connectome](https://en.wikipedia.org/wiki/Connectome) — surveys the science of wiring diagrams and what they can and cannot reveal, the road-map-versus-traffic distinction at the heart of Part 1.
+
+**The mushroom body learning circuit**
+- [Mushroom bodies](https://en.wikipedia.org/wiki/Mushroom_bodies) — describes the insect brain structure behind associative learning, the "classroom" whose Kenyon-cell, MBON, and MBIN wiring Part 3 sketches.
+
+**Directed graphs**
+- [Directed graph](https://en.wikipedia.org/wiki/Directed_graph) — defines nodes, arrows, and in/out-degrees formally, the exact data structure this repository's code manipulates.
+
+**Network motifs**
+- [Network motif](https://en.wikipedia.org/wiki/Network_motif) — introduces recurring small sub-patterns and why researchers count them, matching the convergence, reciprocal-pair, and triangle tallies in Part 5.
+
+**Null models and the degree-preserving shuffle**
+- [Configuration model](https://en.wikipedia.org/wiki/Configuration_model) — explains random graphs with a fixed degree sequence, the mathematical home of the shuffle that generates this project's reference families.
+- [Permutation test](https://en.wikipedia.org/wiki/Permutation_test) — shows how shuffling turns "is this count surprising" into an auditable fraction of cases, the recount logic behind every p-value here.
+
+**Multiple comparisons**
+- [Multiple comparisons problem](https://en.wikipedia.org/wiki/Multiple_comparisons_problem) — explains why testing many motifs at once inflates false discoveries, the caution flagged in Part 9.
+
 ## Choosing your road
 
 If you think in dots, arrows, and shapes, take **graph theory** and **geometry** — a connectome is a drawing, a motif a sub-shape. If you think in membership tests and invariants, take **set theory** — a null model is an equivalence class, an edge an ordered pair. If you think in tables of numbers, take **linear algebra as weight tables** — wiring is a matrix and learning is editing cells. If you think in tallies and enumeration, take **statistical mechanics by counting** and **probability as frequencies** — surprise is low multiplicity, and a p-value is a recount. If you think in questions and answers, take **information theory** — structure is how many yes/no questions the network saves you. If you think in machines and checklists, take **automata** — a motif counter is a three-question checklist in a loop. If you think in incentives and adversaries, take **game theory** — a null model is a skeptic with a handicap, and a teaching signal is a payoff table. If you think in step-by-step rules, take **discrete iterated maps** — circuit activity is one rule evaluated row after row.

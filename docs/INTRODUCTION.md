@@ -1,5 +1,9 @@
 # Introduction: Reading Connectome Patterns Carefully
 
+![Concept figure: a fly wiring diagram is abstracted into a directed graph of nodes and arrows, and specific connection motifs are compared under stated rules](figures/01-concept-schematic.png)
+
+*Figure 1: A fly wiring diagram is abstracted into a directed graph of nodes and arrows, and specific connection motifs are compared under stated rules. (Editable Mermaid source: [figures/concept_figure.md](figures/concept_figure.md).)*
+
 ## Start here
 
 > **Scope of this repository.** This repository studies selected **connection patterns** in a directed-graph representation of a *Drosophila* nervous-system wiring diagram. Its public contents are data-free graph utilities, synthetic software tests, and a qualitative status record. The project asks whether specified patterns differ under stated comparison rules. It does **not** test whether a fly learns, what a circuit computes, how a circuit works, or what causes behavior.

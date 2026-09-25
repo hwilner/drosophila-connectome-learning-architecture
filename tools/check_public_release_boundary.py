@@ -113,6 +113,9 @@ def find_violations(repository_root: Path, paths: Iterable[Path]) -> list[str]:
     violations: list[str] = []
     for relative_path in paths:
         parts = set(relative_path.parts)
+        if relative_path.parts[:2] == ("docs", "figures"):
+            # Owner-approved exemption: generated illustrations in docs/figures/.
+            continue
         if parts & FORBIDDEN_PATH_PARTS:
             violations.append(f"{relative_path}: prohibited tracked path category")
         if relative_path.suffix.lower() in FORBIDDEN_SUFFIXES:

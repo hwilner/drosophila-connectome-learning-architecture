@@ -64,7 +64,8 @@ def degree_preserving_null(
         A rewired copy with the same node set, edge count, and directed degrees.
 
     Raises:
-        ValueError: If the multiplier is invalid or a preservation invariant fails.
+        ValueError: If the multiplier is invalid, the input is too small or too rigid
+            to rewire, or a preservation invariant fails.
     """
     if swap_multiplier <= 0:
         raise ValueError("swap_multiplier must be positive")
@@ -73,7 +74,17 @@ def degree_preserving_null(
     null = graph.copy()
     original_signature = degree_signature(graph)
     requested_swaps = graph.number_of_edges() * swap_multiplier
-    directed_edge_swap(null, nswap=requested_swaps, max_tries=requested_swaps * 50, seed=seed)
+    try:
+        directed_edge_swap(null, nswap=requested_swaps, max_tries=requested_swaps * 50, seed=seed)
+    except nx.NetworkXException as error:
+        # The swap routine rejects graphs that are too small, and gives up when the
+        # attempt budget is exhausted. Both are caller-visible input problems, so they
+        # are reported as ValueError to keep this module's documented contract and to
+        # match the class-constrained helper, which already raises ValueError for an
+        # equivalent shortfall.
+        raise ValueError(
+            f"Directed rewiring could not complete the requested swaps: {error}"
+        ) from error
     if degree_signature(null) != original_signature:
         raise ValueError("Directed rewiring did not preserve the degree signature")
     if any(source == target for source, target in null.edges):

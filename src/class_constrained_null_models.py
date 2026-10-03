@@ -94,6 +94,14 @@ def class_constrained_degree_preserving_null(
         block[second_index] = candidate_two
         successful += 1
     if successful < requested:
+        if successful == 0:
+            # Not a budget shortfall: not one of the attempted swaps was ever admissible.
+            # Every block is immobile under the self-loop and duplicate-edge guards, so
+            # this input cannot produce a rewired graph at the requested block structure.
+            raise ValueError(
+                "Rewiring made no progress: no class block contains a swappable edge "
+                "pair under the self-loop and duplicate-edge rules"
+            )
         raise ValueError(f"Rewiring completed {successful} of {requested} requested swaps")
     if degree_signature(null) != original_degrees:
         raise ValueError("Rewiring did not preserve individual directed degrees")

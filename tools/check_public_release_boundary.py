@@ -71,10 +71,19 @@ TEXT_MARKERS = {
         re.IGNORECASE,
     ),
 }
+# A protected location is a directory used as a path segment (``data/run.csv``) or
+# written as a quoted literal (``open("data")``). The rule deliberately does not match
+# bare prose mentions of the same words: the repository's own scope vocabulary
+# ("data-free tests", "repository data, result, figure, download, or archive paths")
+# is required by CONTRIBUTING.md and must not block a compliant contribution.
 PROTECTED_TEST_PATH = re.compile(
-    r"(?:[\"']|\b)(?:data|results|figures|outputs|downloads|archives)(?:[\"']|/|\b)"
+    r"(?:data|results|figures|outputs|downloads|archives)(?![-\w])(?=[/\\]|[\"'])"
 )
 TEXT_SUFFIXES = frozenset({".md", ".py", ".toml", ".txt"})
+# Owner-approved exemption, scoped to the protected-test-path rule only: a test for that
+# rule has to spell out the protected directory names to prove they are detected. Every
+# other rule, and the whole of every other tracked file, is still enforced.
+SCANNER_TEST_PATH = Path("tests/test_check_public_release_boundary.py")
 
 
 def tracked_paths(repository_root: Path) -> list[Path]:
@@ -137,7 +146,12 @@ def find_violations(repository_root: Path, paths: Iterable[Path]) -> list[str]:
         for description, pattern in markers.items():
             if pattern.search(text):
                 violations.append(f"{relative_path}: {description} marker")
-        if relative_path.parts and relative_path.parts[0] == "tests" and PROTECTED_TEST_PATH.search(text):
+        if (
+            relative_path.parts
+            and relative_path.parts[0] == "tests"
+            and relative_path != SCANNER_TEST_PATH
+            and PROTECTED_TEST_PATH.search(text)
+        ):
             violations.append(f"{relative_path}: test references a protected repository location")
     return violations
 

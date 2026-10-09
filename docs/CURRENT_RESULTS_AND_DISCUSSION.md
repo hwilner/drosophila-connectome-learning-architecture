@@ -18,7 +18,7 @@ The triangle check remains unrun on the approved graph. Synthetic checks show th
 
 ## What the Result Does Not Show
 
-These results do not show that a pattern is enriched or depleted. They do not select one reference family as the correct one. They do not establish that the completed checks would give the same outcome under a different representation, label choice, or comparison rule.
+These results do not show that a pattern is enriched or depleted. They also do not select a correct reference family: the public record offers no basis for preferring either predefined family, and the reciprocal-pair check's change of direction between the two families marks a limitation of the comparison architecture, not a property established about the approved graph. They do not establish that the completed checks would give the same outcome under a different representation, label choice, or comparison rule.
 
 The results also do not show how a circuit functions, whether it supports learning, or what causes behavior. A structural description of connections alone cannot make those claims. No behavioral, functional, or causal test is included here.
 

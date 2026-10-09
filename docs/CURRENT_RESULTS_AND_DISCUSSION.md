@@ -6,7 +6,7 @@ The completed structural checks give an **inconclusive** result for enrichment o
 
 The reciprocal-pair check gave different directions under the two reference families. That change means the result depends on the comparison architecture that is assumed. It is therefore not a reference-independent finding.
 
-The feed-forward-triangle check has been defined and exercised only with synthetic graphs. It has not been calculated on the approved graph, and it has not been compared with either reference family.
+The feed-forward-triangle check is a synthetic-only software exercise, not an empirical triangle calculation: the counting helper has been exercised exclusively on invented in-memory graphs to confirm its own implementation behavior. No feed-forward-triangle count has been performed on the approved graph, and no reference-family comparison has been carried out for it, so this record contains no triangle result at all. The synthetic check cannot support an enrichment, depletion, functional, learning-related, mechanistic, or causal claim.
 
 ## Interpretation
 

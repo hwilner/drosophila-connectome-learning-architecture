@@ -25,7 +25,12 @@ def test_select_nodes_uses_exact_labels() -> None:
 
 
 def test_collapse_edges_omits_self_edges_and_aggregates_pairs() -> None:
-    """Aggregate eligible duplicate pairs without reading or writing files."""
+    """Aggregate eligible duplicate pairs without reading or writing files.
+
+    Also covers the error contract: when every supplied edge is either a
+    self-loop or touches a node whose label is excluded, no eligible non-self
+    edge remains and ``collapse_edges`` must raise ``ValueError``.
+    """
     nodes = [
         make_node(1, "group_a"),
         make_node(2, "group_b"),
@@ -44,3 +49,26 @@ def test_collapse_edges_omits_self_edges_and_aggregates_pairs() -> None:
         (1, 2, 8, 2),
         (2, 3, 11, 1),
     ]
+
+    # Second in-memory fixture: every edge is a self-loop or touches an
+    # excluded-label node, so no eligible non-self edge survives filtering.
+    # Eligible nodes are included so the rejection comes from the edge filter
+    # in collapse_edges, not from the earlier no-matching-nodes guard.
+    excluded_or_self_nodes = [
+        make_node(1, "group_a"),
+        make_node(2, "group_b"),
+        make_node(3, "other"),
+    ]
+    excluded_or_self_edges = [
+        Edge(1, 1, 3, "self"),
+        Edge(2, 2, 5, "self"),
+        Edge(1, 3, 7, "excluded"),
+        Edge(3, 2, 11, "excluded"),
+    ]
+    try:
+        collapse_edges(excluded_or_self_nodes, excluded_or_self_edges)
+    except ValueError as error:
+        # Pin the specific contract so a different ValueError cannot pass.
+        assert "No eligible non-self edges" in str(error)
+    else:
+        raise AssertionError("Expected ValueError when no eligible non-self edge exists")

@@ -75,5 +75,5 @@ def test_reciprocal_pair_count_requires_both_directions() -> None:
 
 def test_feed_forward_triangle_count_requires_all_edges() -> None:
     """Count only complete synthetic ordered feed-forward triples."""
-    graph = SimpleDiGraph([(1, 10), (10, 100), (1, 100), (10, 100), (10, 1), (100, 10)])
+    graph = SimpleDiGraph([(1, 10), (10, 100), (1, 100), (10, 1), (100, 10)])
     assert count_feed_forward_triangles(graph, {1}, {10}, {100}) == 1

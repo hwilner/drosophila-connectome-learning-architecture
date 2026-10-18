@@ -52,13 +52,19 @@ def test_convergent_target_count_uses_distinct_predecessors() -> None:
 
 
 def test_convergent_target_count_rejects_invalid_threshold() -> None:
-    """Reject thresholds that cannot define a positive predecessor requirement."""
-    try:
-        count_convergent_targets(SimpleDiGraph([]), set(), set(), minimum_sources=0)
-    except ValueError as error:
-        assert "at least one" in str(error)
-    else:
-        raise AssertionError("Expected ValueError for a nonpositive threshold")
+    """Reject thresholds that cannot define a positive predecessor requirement.
+
+    Covers both the zero threshold and a negative threshold; each must raise
+    ``ValueError`` whose message keeps communicating the positive minimum.
+    """
+    # An empty in-memory fixture suffices: the guard fires before any lookup.
+    for invalid_threshold in (0, -1):
+        try:
+            count_convergent_targets(SimpleDiGraph([]), set(), set(), minimum_sources=invalid_threshold)
+        except ValueError as error:
+            assert "at least one" in str(error)
+        else:
+            raise AssertionError("Expected ValueError for a nonpositive threshold")
 
 
 def test_reciprocal_pair_count_requires_both_directions() -> None:
@@ -69,5 +75,5 @@ def test_reciprocal_pair_count_requires_both_directions() -> None:
 
 def test_feed_forward_triangle_count_requires_all_edges() -> None:
     """Count only complete synthetic ordered feed-forward triples."""
-    graph = SimpleDiGraph([(1, 10), (10, 100), (1, 100), (10, 1), (100, 10)])
+    graph = SimpleDiGraph([(1, 10), (10, 100), (1, 100), (10, 100), (10, 1), (100, 10)])
     assert count_feed_forward_triangles(graph, {1}, {10}, {100}) == 1

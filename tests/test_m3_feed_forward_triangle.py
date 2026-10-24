@@ -45,6 +45,19 @@ def test_feed_forward_helper_counts_complete_ordered_triples() -> None:
 
 
 def test_feed_forward_helper_requires_all_directed_edges() -> None:
-    """Reject synthetic triples missing any required edge direction."""
+    """Reject synthetic triples missing any required edge direction.
+
+    Also confirm that a complete-edge in-memory fixture still yields zero
+    when any one of the three ordered groups is empty: with no eligible node
+    in a position, no ordered triple can be formed regardless of which edges
+    are present.
+    """
     graph = SimpleDiGraph([(1, 10), (10, 100)])
     assert m3_kc_mbin_mbon_feed_forward_triangle_count(graph, {1}, {10}, {100}) == 0
+
+    # Complete-edge fixture: all three feed-forward edges are present, so a
+    # zero count can only come from the empty group, never from a missing edge.
+    complete = SimpleDiGraph([(1, 10), (10, 100), (1, 100)])
+    assert m3_kc_mbin_mbon_feed_forward_triangle_count(complete, set(), {10}, {100}) == 0
+    assert m3_kc_mbin_mbon_feed_forward_triangle_count(complete, {1}, set(), {100}) == 0
+    assert m3_kc_mbin_mbon_feed_forward_triangle_count(complete, {1}, {10}, set()) == 0

@@ -73,6 +73,13 @@ def test_degree_preserving_null_reports_unrewirable_input_as_value_error() -> No
 
 
 def test_degree_preserving_null_rejects_nonpositive_multiplier() -> None:
-    """Reject a multiplier that cannot request a positive number of swaps."""
-    with pytest.raises(ValueError):
-        degree_preserving_null(synthetic_graph(), seed=1, swap_multiplier=0)
+    """Reject a multiplier that cannot request a positive number of swaps.
+
+    Both zero and negative multipliers must be refused by the documented
+    validation guard before any rewiring is attempted; matching on the
+    guard's message pins the rejection to that early input check rather
+    than to a swap-routine failure later in the call.
+    """
+    for multiplier in (0, -1):
+        with pytest.raises(ValueError, match="swap_multiplier must be positive"):
+            degree_preserving_null(synthetic_graph(), seed=1, swap_multiplier=multiplier)

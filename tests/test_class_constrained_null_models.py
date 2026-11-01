@@ -60,6 +60,26 @@ def test_class_constrained_null_rejects_missing_class_assignment() -> None:
         class_constrained_degree_preserving_null(graph, classes, seed=1, swap_multiplier=1)
 
 
+def test_class_constrained_null_rejects_missing_assignment() -> None:
+    """Reject an incomplete node-class mapping before any rewiring result is used.
+
+    The class mapping below covers every edge endpoint of the small in-memory
+    directed graph but deliberately omits one graph node, so rejection must come
+    from the whole-graph coverage validation in
+    ``class_constrained_degree_preserving_null``. Because the call raises inside
+    the ``pytest.raises`` block, no rewired graph is ever produced or inspected,
+    confirming the guard fires before any rewiring result could be used. This
+    complements the endpoint-focused case above by exercising the same guard
+    through a node that no edge touches.
+    """
+    graph = nx.DiGraph([(1, 2), (2, 3), (3, 1)])
+    # Node 4 is part of the graph but intentionally absent from the class mapping.
+    graph.add_node(4)
+    classes = {1: "a", 2: "b", 3: "a"}
+    with pytest.raises(ValueError, match="needs a class assignment"):
+        class_constrained_degree_preserving_null(graph, classes, seed=1, swap_multiplier=1)
+
+
 def test_class_constrained_null_rejects_nonpositive_multiplier() -> None:
     """Reject a multiplier that cannot request a positive number of swaps."""
     graph = nx.DiGraph([(1, 3), (2, 4), (3, 5), (4, 6), (5, 1), (6, 2)])
